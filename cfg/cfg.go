@@ -1,7 +1,7 @@
 package cfg
 
 import (
-	"encoding/gob"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -46,7 +46,7 @@ func (c *Config) readFromFile() error {
 
 	var data map[string]interface{}
 	if stat.Size() > 0 {
-		if err := gob.NewDecoder(file).Decode(&data); err != nil && err != io.EOF {
+		if err := json.NewDecoder(file).Decode(&data); err != nil && err != io.EOF {
 			file.Close()
 			return fmt.Errorf("unable to decode config file as JSON: %w", err)
 		}
@@ -195,7 +195,7 @@ func (c *Config) flushUnsafeLocked() error {
 		return err
 	}
 
-	if err := gob.NewEncoder(c.file).Encode(c.data); err != nil {
+	if err := json.NewEncoder(c.file).Encode(c.data); err != nil {
 		return err
 	}
 	return c.file.Sync()
