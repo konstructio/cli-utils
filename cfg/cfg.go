@@ -17,6 +17,8 @@ type Config struct {
 	path string
 }
 
+// New creates a new Config instance. If a file exists at the given path, it
+// will be read and loaded into the Config instance.
 func New(path string) (*Config, error) {
 	c := &Config{
 		path: path,
@@ -29,6 +31,7 @@ func New(path string) (*Config, error) {
 	return c, nil
 }
 
+// readFromFile reads the configuration data from the file.
 func (c *Config) readFromFile() error {
 	file, err := os.OpenFile(c.path, os.O_RDWR|os.O_CREATE, 0o644)
 	if err != nil {
@@ -65,6 +68,8 @@ func (c *Config) readFromFile() error {
 	return nil
 }
 
+// GetString returns a string value for the given key and a boolean indicating
+// if the key exists.
 func (c *Config) GetString(key string) (string, bool) {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
@@ -77,6 +82,8 @@ func (c *Config) GetString(key string) (string, bool) {
 	return s, ok
 }
 
+// GetInt returns an int value for the given key and a boolean indicating
+// if the key exists.
 func (c *Config) GetInt(key string) (int, bool) {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
@@ -99,6 +106,8 @@ func (c *Config) GetInt(key string) (int, bool) {
 	return i, true
 }
 
+// GetFloat64 returns a float64 value for the given key and a boolean indicating
+// if the key exists.
 func (c *Config) GetFloat64(key string) (float64, bool) {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
@@ -112,6 +121,8 @@ func (c *Config) GetFloat64(key string) (float64, bool) {
 	return v, ok
 }
 
+// GetBool returns a bool value for the given key and a boolean indicating
+// if the key exists.
 func (c *Config) GetBool(key string) (bool, bool) {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
