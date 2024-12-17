@@ -201,6 +201,7 @@ func (c *Config) flushUnsafeLocked() error {
 	return c.file.Sync()
 }
 
+// GetAll returns a copy of the configuration data.
 func (c *Config) GetAll() (map[string]interface{}, error) {
 	if err := c.readFromFile(); err != nil {
 		return nil, err
