@@ -19,7 +19,7 @@ type Step struct {
 	spinner      *spin.Spinner
 	chResult     chan error
 	chDone       chan struct{}
-	doneCount    atomic.Int32
+	doneCount    atomic.Uint32
 	onceComplete sync.Once
 }
 
