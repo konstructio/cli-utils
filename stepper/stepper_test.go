@@ -16,8 +16,8 @@ func TestNewStep(t *testing.T) {
 		t.Errorf("expected step name to be 'Test Step', got '%s'", step.GetName())
 	}
 
-	if step.done != 0 {
-		t.Errorf("expected step done to be 0, got %d", step.done)
+	if n := step.doneCount.Load(); n != 0 {
+		t.Errorf("expected step done to be 0, got %d", n)
 	}
 }
 
@@ -31,8 +31,8 @@ func TestStepCompleteSuccess(t *testing.T) {
 		t.Errorf("expected no error, got %v", err)
 	}
 
-	if step.done != 1 {
-		t.Errorf("expected step done to be 1, got %d", step.done)
+	if n := step.doneCount.Load(); n != 1 {
+		t.Errorf("expected step done to be 1, got %d", n)
 	}
 
 	expectedOutput := "\r✅ Test Step\n"
@@ -51,8 +51,8 @@ func TestStepCompleteFailure(t *testing.T) {
 		t.Errorf("expected error, got nil")
 	}
 
-	if step.done != 1 {
-		t.Errorf("expected step done to be 1, got %d", step.done)
+	if n := step.doneCount.Load(); n != 1 {
+		t.Errorf("expected step done to be 1, got %d", n)
 	}
 
 	expectedOutput := "\r🔴 Test Step - error: test error\n"
@@ -85,8 +85,8 @@ func TestStepSpinner(t *testing.T) {
 	time.Sleep(10 * time.Millisecond)
 	step.Complete(nil)
 
-	if step.done != 1 {
-		t.Errorf("expected step done to be 1, got %d", step.done)
+	if n := step.doneCount.Load(); n != 1 {
+		t.Errorf("expected step done to be 1, got %d", n)
 	}
 
 	if output.Len() == 0 {

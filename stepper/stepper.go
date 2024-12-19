@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/tj/go-spin"
@@ -18,7 +19,7 @@ type Step struct {
 	spinner      *spin.Spinner
 	chResult     chan error
 	chDone       chan struct{}
-	done         uint32
+	doneCount    atomic.Int32
 	onceComplete sync.Once
 }
 
@@ -70,7 +71,7 @@ func (s *Step) Complete(err error) error {
 
 	// Ensure the step is only completed once, subsequent calls to Complete
 	// will return an AlreadyCompletedError.
-	if s.done++; s.done > 1 {
+	if newcount := s.doneCount.Add(1); newcount > 1 {
 		returnErr = &AlreadyCompletedError{Name: s.name}
 	}
 
